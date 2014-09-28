@@ -10,6 +10,10 @@ namespace TriangleRollUp.Domain {
             if (nums.Count == 0) return String.Empty;
             if (nums.Count == 1) return String.Format("{0}\n", nums[0]);
 
+            return GetStringFromTriangle(BuildIntTriangle(nums));
+        }
+
+        private Stack<List<int>> BuildIntTriangle(List<int> nums) {
             List<int> current = nums;
             Stack<List<int>> triangle = new Stack<List<int>>();
             triangle.Push(null);
@@ -19,14 +23,17 @@ namespace TriangleRollUp.Domain {
                 int back = 0;
                 int front = 1;
                 while (front < current.Count) {
-                    next.Add(current[back] + current[front]);
-                    back++;
-                    front++;
+                    next.Add(current[back++] + current[front++]);
                 }
                 current = next;
             } while (current.Count > 1);
             triangle.Push(current);
-            int tabs = nums.Count - 1;
+
+            return triangle;
+        }
+
+        private string GetStringFromTriangle(Stack<List<int>> triangle) {
+            int tabs = triangle.Count - 2;
             StringBuilder sb = new StringBuilder();
             List<int> row = triangle.Pop();
             while (row != null) {
@@ -38,7 +45,7 @@ namespace TriangleRollUp.Domain {
                     sb.Append("\t\t");
                 }
                 sb.Append("\n");
-                
+
                 tabs--;
                 row = triangle.Pop();
             }
